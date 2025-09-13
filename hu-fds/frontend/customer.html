@@ -1,0 +1,706 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HacoBite Customer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+    body { background-color: #f8f9fa; color: #333; height: 100vh; display: flex; flex-direction: column; }
+    .header {
+      background-color: #77AB5C; color: white;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; font-size: 1.3rem; font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .header .logo { font-size: 1.5rem; }
+    .main-container { display: flex; flex: 1; overflow: hidden; }
+    .sidebar {
+      width: 220px; background-color: white; border-right: 1px solid #e0e0e0; padding: 1rem 0;
+      display: flex; flex-direction: column;
+    }
+    .sidebar-item {
+      padding: 0.8rem 1.5rem; cursor: pointer; display: flex; align-items: center;
+      transition: background-color 0.2s;
+    }
+    .sidebar-item:hover, .sidebar-item.active {
+      background-color: #e8f5e9;
+      border-left: 4px solid #77AB5C;
+    }
+    .sidebar-item i { margin-right: 10px; width: 20px; text-align: center; }
+    .content-area {
+      flex: 1; padding: 2rem; overflow-y: auto;
+    }
+    .section-title {
+      font-weight: bold; font-size: 1.5rem; margin-bottom: 1rem; color: #444;
+    }
+    .product-grid, .order-grid, .explore-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .product-card, .order-card, .explore-card, .menu-card {
+      background: white; border-radius: 10px; padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: transform 0.2s;
+    }
+    .product-card:hover, .order-card:hover, .explore-card:hover , .menu-card{
+      transform: translateY(-5px);
+    }
+    .product-card img,.menu-card, .explore-card img {
+      width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 0.5rem;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      padding: 0.5rem 1rem;
+      max-width: 400px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .search-bar i {
+      color: #888;
+      margin-right: 0.5rem;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 1rem;
+    }
+    .user-profile {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      max-width: 500px;
+      margin: 2rem 0; /* bu satırı değiştirdik */
+    }
+
+    .user-profile h2 { margin-bottom: 1rem; color: #555; }
+    .user-profile p { margin-bottom: 0.5rem; color: #666; }
+    
+.filter-box {
+  background: linear-gradient(to right, #e6f4ea, #f3fbf4);
+  border: 1px solid #d4e8d4;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+.filter-row > * {
+  flex: 1;
+  min-width: 120px;
+  margin-right: 10px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.fancy-input {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  max-width: 600px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+    .address-box, .card-box {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+.fancy-input i {
+  color: #888;
+  margin-right: 0.5rem;
+}
+
+.fancy-input input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 1rem;
+  background: transparent;
+}
+
+select,
+input[type="number"] {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background-color: #fff;
+  min-width: 120px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+    .info-box {
+      background: white;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    .edit-btn {
+      background-color: #77AB5C;
+      color: white;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .delete-circle-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+    .delete-circle-btn:hover {
+      background-color: #c0392b;
+    }
+    .cart-summary {
+      margin-top: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn {
+      background-color: #77AB5C;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .btn:hover {
+      background-color: #689e52;
+    }
+    .cart-badge {
+      position: absolute;
+      top: -5px;
+      right: -10px;
+      background-color: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 0.75rem;
+      display: none;
+      cursor: pointer;
+    }
+    .badge-container {
+      position: relative;
+      width: 48px;
+      height: 48px;
+    }
+
+    .badge-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .badge-level-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      text-shadow:
+              0 0 4px #00ffcc,
+              0 0 8px #00ffcc,
+              0 0 12px #00ffcc;
+      animation: neonPulse 1.5s infinite ease-in-out;
+    }
+      .pretty-button {
+    background-color: #e9f5e1;
+    color: #3e8e41;
+    border: 2px solid #77AB5C;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pretty-button:hover {
+    background-color: #d9efcf;
+  }
+
+  .cancel-button {
+  background-color: #f2f2f2;
+  color: #444;
+  border: 2px solid #bbb;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+  background-color: #ddd;
+}
+
+
+    @keyframes neonPulse {
+      0% {
+        text-shadow:
+                0 0 4px #00ffcc,
+                0 0 8px #00ffcc;
+      }
+      50% {
+        text-shadow:
+                0 0 10px #00ffff,
+                0 0 18px #00ffff;
+      }
+      100% {
+        text-shadow:
+                0 0 4px #00ffcc,
+                0 0 8px #00ffcc;
+      }
+    }
+
+
+  </style>
+
+</head>
+<body>
+<div class="header">
+  <div class="logo">HacoBite Customer</div>
+  <div style="display: flex; align-items: center; gap: 1.2rem;">
+    <img id="headerAvatarImg"
+         src="avatars/default.jpg"
+         alt="Avatar"
+         onclick="showPage('profile')"
+         style="width: 40px; height: 40px; border-radius: 50%; cursor: pointer; border: 2px solid white; object-fit: cover;" />
+
+    <div onclick="showPage('cart')"
+         style="width: 40px; height: 40px; background-color: white; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.2); position: relative;">
+      <i class="fas fa-shopping-cart" style="color: #77AB5C; font-size: 1.2rem;"></i>
+      <span id="cartCountBadge" class="cart-badge">0</span>
+    </div>
+
+</div>
+</div>
+
+
+  </div>
+  <div class="main-container">
+    <div class="sidebar">
+      <div class="sidebar-item active" onclick="showPage('home')"><i class="fas fa-home"></i>Home</div>
+      <div class="sidebar-item" onclick="showPage('profile')"><i class="fas fa-user"></i>Profile</div>
+      <div class="sidebar-item" onclick="showPage('orders')"><i class="fas fa-shopping-bag"></i>Orders</div>
+      <div class="sidebar-item" onclick="showPage('explore')"><i class="fas fa-search"></i>Explore</div>
+      <div class="sidebar-item" onclick="logout()" style="margin-top: auto; color: #c0392b;">
+        <i class="fas fa-sign-out-alt"></i>Logout
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div id="homePage" class="page">
+        <div class="menu-products">
+          <div class="section-title">Menus</div>
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="menuSearchInput" placeholder="Search menus..." oninput="filterMenus()" />
+          </div>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+            <select id="menuCategoryFilter" style="display: none;" onchange="filterMenus()">
+            </select>
+            <input id="menuMinPrice" type="number" placeholder="Min ₺" oninput="filterMenus()" />
+            <input id="menuMaxPrice" type="number" placeholder="Max ₺" oninput="filterMenus()" />
+            <input id="menuMinCalories" type="number" placeholder="Min kcal" oninput="filterMenus()" />
+            <input id="menuMaxCalories" type="number" placeholder="Max kcal" oninput="filterMenus()" />
+          </div>
+
+          <div class="product-grid" id="menusContainer"></div>
+        </div>
+        <div class="menu-products">
+
+        <div class="section-title">Products</div>
+
+        <form id="productFilterForm" oninput="filterProducts()" style="margin-bottom: 2rem;">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="productSearchInput" placeholder="Search by name, category or restaurant..." />
+          </div>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+            <select id="categoryFilter" style="display: none;">
+            </select>
+            <input id="minPrice" placeholder="Min ₺" type="number" oninput="filterProducts()" />
+            <input id="maxPrice" placeholder="Max ₺" type="number" oninput="filterProducts()" />
+            <input id="minCalories" placeholder="Min kcal" type="number" oninput="filterProducts()" />
+            <input id="maxCalories" placeholder="Max kcal" type="number" oninput="filterProducts()" />
+          </div>
+        </form>
+
+        <div class="product-grid" id="productsContainer"></div>
+        </div>
+
+        <div class="menu-products">
+
+        <div class="section-title" style="margin-top: 2rem;">Popular Restaurants</div>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <input type="text" id="restaurantSearchInput" placeholder="Search restaurants..." oninput="filterRestaurants()" />
+        </div>
+
+        <div id="popularRestaurantsContainer" class="product-grid"></div>
+        </div>
+
+
+      </div>
+
+
+      <div id="profilePage" class="page" style="display: none;">
+        <!-- Başlık ve Edit Profile Butonu -->
+        <div class="section-title" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Profile</span>
+          <button id="editProfileBtn" class="pretty-button">
+            <span style="color: #e67e22;">✏️</span> Edit Profile
+          </button>
+        </div>
+        <!-- Profil Görünümü: Avatar + Bilgi -->
+
+        <div class="user-profile" id="profileDisplay" style="display: flex; align-items: center; gap: 2rem;">
+          <!-- Avatar -->
+          <div style="text-align: center;">
+            <img id="customerAvatarImg" src="avatars/default.jpg"
+                 alt="Avatar" style="width: 100px; height: 100px; border-radius: 50%;
+           object-fit: cover; border: 2px solid #77AB5C;" />
+            <br />
+            <button onclick="editCustomerAvatar()"
+                    style="margin-top: 10px; background-color: #ccc; border: none;
+                     padding: 5px 10px; border-radius: 6px; cursor: pointer;">
+              Edit Avatar
+            </button>
+            <div id="customerAvatarName" style="margin-top: 8px; font-weight: bold; color: #444;"></div>
+
+          </div>
+
+          <!-- Bilgi -->
+          <div style="flex: 1;">
+            <p><strong>Name:</strong> <span id="displayName"></span></p>
+            <p><strong>Age:</strong> <span id="displayAge"></span></p>
+            <p><strong>Phone:</strong> <span id="displayPhone"></span></p>
+          </div>
+        </div>
+        <div id="avatarSelectList" class="product-grid" style="display: none;"></div>
+
+        <!-- Profil Düzenleme Formu -->
+        <div class="user-profile" id="profileEdit" style="display: none;">
+          <form id="updateProfileForm">
+            <input type="text" id="updateName" placeholder="Name" style="margin-bottom: 10px; width: 100%; padding: 0.5rem;" />
+            <input type="number" id="updateAge" placeholder="Age" style="margin-bottom: 10px; width: 100%; padding: 0.5rem;" />
+            <input type="text" id="updatePhone" placeholder="Phone Number (0XXX XXX XX XX)" style="margin-bottom: 10px; width: 100%; padding: 0.5rem;" />
+            <button type="submit" style="background-color: #77AB5C; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer;">
+              Save
+            </button>
+          </form>
+        </div>
+        <!-- Level & Points -->
+        <div id="customerLevelInfo" class="user-profile" style="margin-bottom: 1rem; text-align: center;">
+          <h3 style="margin-bottom: 8px; color: #333;">🎖️ Your Progress</h3>
+          <p><strong>Points:</strong> <span id="customerPoints">-</span></p>
+
+          <div style="margin-top: 1rem; display: flex; align-items: center; justify-content: center;">
+
+            <!-- LEVEL BADGE tam başta -->
+            <div class="badge-container" style="margin-right: -16px;margin-top: -6px;"> <!-- küçük negatif margin -->
+              <img src="avatars/badge.png" class="badge-image" alt="Level Badge" />
+              <div class="badge-level-text" id="currentLevelBadge"></div>
+            </div>
+
+            <!-- SLIDER BAR -->
+            <div style="flex: 1; max-width: 300px; background: #e0e0e0; height: 14px; border-radius: 10px; overflow: hidden;">
+              <div id="levelProgressBar"
+                   style="height: 100%; background:  linear-gradient(90deg, #2E8B57, #7DFF7D); width: 0%; transition: width 0.4s;"></div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+        <!-- Profil bilgileri altına ekle -->
+        <div class="section-title" style="margin-top: 2rem;">Your Addresses</div>
+        <div style="margin-top: 1rem;">
+          <button id="toggleAddressFormBtn" class="pretty-button">
+            <span style="color: #8e44ad;">➕</span> Add Address
+          </button>
+
+        </div>
+        <div id="addressContainer" class="product-grid"></div>
+        <div class="user-profile" id="addressFormSection" style="display: none;">
+          <form id="addAddressForm">
+            <input id="addressCountry" placeholder="Country" required style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" />
+            <input id="addressCity" placeholder="City" required style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" />
+            <input id="addressState" placeholder="State" required style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" />
+            <input id="addressStreet" placeholder="Street" required style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" />
+            <input id="addressApartment" placeholder="Apartment Number" required style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" />
+            <input id="addressFloor" placeholder="Floor" required style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" />
+            <input id="addressFlat" placeholder="Flat Number" required style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" />
+            <input id="addressPostal" placeholder="Postal Code" required style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" />
+            <button id="submitAddressBtn" type="submit" class="pretty-button">
+              <span style="color: green;">📬</span> Add Address
+            </button>
+            <button type="button" id="cancelAddressBtn" class="cancel-button" style="margin-left: 10px;">
+              ❌ Cancel
+            </button>
+
+
+          </form>
+        </div>
+
+
+        <div class="section-title" style="margin-top: 2rem;">Your Credit Cards</div>
+
+
+        <!-- Bu buton VE form doğrudan yukarıdaki container'dan sonra gelmeli -->
+        <div style="margin-top: 1rem;">
+          <button id="toggleCardFormBtn" class="pretty-button">
+            <span style="color: purple;">💳</span> Add Credit Card
+          </button>
+        </div>
+        <div id="cardContainer" class="product-grid"></div>
+
+        <div class="user-profile" id="cardFormSection" style="display: none;">
+          <form id="addCardForm">
+            <input id="cardNumber" placeholder="Card Number (16 digits)" style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" required />
+            <input id="cardExpireDate" placeholder="Expiry Date (MM/YY)" style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" required />
+            <input id="cardCVC" placeholder="CVC (3 digits)" style="margin-bottom: 8px; width: 100%; padding: 0.5rem;" required />
+            <button id="submitCardBtn" type="submit" class="pretty-button">
+              💳 Add Card
+            </button>
+            <button type="button" id="cancelCardBtn" class="cancel-button">
+              ❌ Cancel
+            </button>
+          </form>
+        </div>
+
+
+        <div class="section-title" style="margin-top: 2rem;">Available Derby Tasks</div>
+        <div class="product-grid" id="availableTasksContainer"></div>
+
+        <div class="section-title" style="margin-top: 2rem;">Assigned Derby Tasks</div>
+        <div class="product-grid" id="assignedTasksContainer"></div>
+
+      </div>
+      <!-- Avatar seçimi listesi (başta gizli) -->
+
+
+      <div id="ordersPage" class="page" style="display: none;">
+        <div class="section-title">My Orders</div>
+        <div id="orderListContainer" class="order-grid"></div>
+      </div>
+
+      <div id="explorePage" class="page" style="display: none;">
+        <div class="section-title">Explore Restaurants</div>
+        <div class="explore-grid">
+          <div class="explore-card">
+            <img src="https://via.placeholder.com/200" alt="Explore">
+            <h4>Italiano Pizza</h4>
+            <p>Special Deals!</p>
+          </div>
+          <div class="explore-card">
+            <img src="https://via.placeholder.com/200" alt="Explore">
+            <h4>Gourmet Burgers</h4>
+            <p>Best in town</p>
+          </div>
+        </div>
+      </div>
+      <div id="cartPage" class="page" style="display: none;">
+        <div class="section-title">Your Cart</div>
+        <div id="cartItemsContainer" class="product-grid">
+          <!-- Cart items will be injected here -->
+        </div>
+        <div style="margin-top: 2rem; text-align: right;">
+          <strong>Total:</strong> <span id="cartTotal">₺0</span>
+        <button class="pretty-button" style="margin-left: 1rem;" onclick="showPurchasePage()">
+          🛒 Checkout
+        </button>
+
+        </div>
+        <div class="section-title" style="margin-top: 2rem;">Available Coupons</div>
+        <div id="couponListContainer" class="product-grid"></div>
+
+      </div>
+          <!-- Purchase Page -->
+      <div id="purchasePage" class="page" style="display: none;">
+        <div class="section-title">Complete Your Purchase</div>
+
+        <!-- Address Selection -->
+        <div class="user-profile">
+          <h3>Select Delivery Address</h3>
+          <select id="addressSelect" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem;"></select>
+          <button class="pretty-button" onclick="showPage('profile'); setTimeout(() => document.getElementById('toggleAddressFormBtn').click(), 200);">
+            ➕ Add New Address
+          </button>
+        </div>
+
+        <!-- Credit Card Selection -->
+        <div class="user-profile">
+          <h3>Select Credit Card</h3>
+          <select id="cardSelect" style="width: 100%; padding: 0.5rem; margin-bottom: 1rem;"></select>
+          <button class="pretty-button" onclick="showPage('profile'); setTimeout(() => document.getElementById('toggleCardFormBtn').click(), 200);">
+            💳 Add New Credit Card
+          </button>
+        </div>
+
+        <!-- Summary -->
+        <div class="user-profile">
+          <h3>Order Summary</h3>
+          <div id="purchaseSummary"></div>
+          <div style="margin-top: 1rem; text-align: right;">
+            <button class="pretty-button" onclick="submitPurchase()">✅ Confirm Purchase</button>
+          </div>
+        </div>
+      </div>
+              
+    </div>
+  </div>
+<div id="popupOverlay" style="display: none; position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 999;"></div>
+
+<div id="reviewPopup" style="display: none; position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -50%); background: white; padding: 2rem;
+  border-radius: 10px; z-index: 1000; max-width: 400px; width: 90%;">
+  <h3>Rate & Review</h3>
+  <input type="hidden" id="reviewOrderId" />
+  <input type="hidden" id="reviewRestaurantId" />
+  <label for="reviewRating">Rating (1-5):</label>
+  <input type="number" id="reviewRating" min="1" max="5" style="width: 100%; margin-bottom: 10px;" />
+  <label for="reviewText">Review:</label>
+  <textarea id="reviewText" rows="4" style="width: 100%;"></textarea>
+  <br />
+  <button class="pretty-button" onclick="submitReview()">✅ Submit</button>
+  <button class="cancel-button" onclick="closeReviewPopup()">Cancel</button>
+</div>
+
+  
+  <script src="customer.js"></script>
+
+  <script>
+    function showPage(page) {
+
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      document.getElementById(page + 'Page').style.display = 'block';
+      document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      if (page === 'home') {
+        loadHomeProducts();
+        loadHomeMenus();
+      } else if (page === 'profile') {
+        loadCustomerTasks();
+        loadAssignedDerbyTasks();
+        loadCustomerProfile();
+        initCreditCardManagement();
+        loadCustomerLevelPoints();
+
+
+        // Profil açıldığında görüntüleme modunu göster, formu gizle
+        const display = document.getElementById("profileDisplay");
+        const edit = document.getElementById("profileEdit");
+        if (display && edit) {
+          display.style.display = "block";
+          edit.style.display = "none";
+        }
+      }
+      else if (page === 'explore') {
+      window.location.href = "scroll.html";
+      }
+      else if (page === 'cart') {
+        loadCartItems(); // This will be your function to render cart items
+      }else if (page === 'orders'){
+        loadCustomerOrders();
+      }
+
+    }
+
+    function logout() {
+      const confirmed = confirm("Are you sure you want to log out?");
+      if (confirmed) {
+        localStorage.clear();
+        window.location.href = "index.html";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      loadHomeProducts();
+      loadHomeMenus();
+      loadPopularRestaurants();
+      updateCartCount();
+      loadCustomerAvatar();
+
+
+      // Edit butonuna tıklanınca formu göster
+      const editBtn = document.getElementById("editProfileBtn");
+      if (editBtn) {
+        editBtn.addEventListener("click", function () {
+          document.getElementById("profileDisplay").style.display = "none";
+          document.getElementById("profileEdit").style.display = "block";
+        });
+      }
+        
+
+      // Form submit işlemini bağla
+      const form = document.getElementById("updateProfileForm");
+      if (form) {
+        form.addEventListener("submit", updateCustomerProfile);
+      }
+
+      document.getElementById("toggleAddressFormBtn").addEventListener("click", toggleAddressForm);
+      document.getElementById("cancelAddressBtn").addEventListener("click", () => {
+        document.getElementById("addressFormSection").style.display = "none";
+        document.getElementById("addAddressForm").reset();
+        editingAddressId = null;
+      });
+
+    });
+  </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Sign Up - HacoBite</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("images/background.jpg"); /* kendi dosya ismini yaz */
+            background-size: contain;      /* pattern tekrar etsin */
+            background-repeat: repeat;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+
+        .logo {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .signup-container {
+            background-color: #77AB5C;
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 30px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .profile-placeholder {
+            width: 60px;
+            height: 60px;
+            background-color: #fff;
+            margin: 10px auto;
+            border-radius: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #999;
+            font-size: 14px;
+        }
+        button {
+        width: 100%;
+        padding: 14px;
+        font-size: 17px;
+        background-color: #88d062;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s ease-in-out;
+        }
+
+        button:hover {
+        background-color: #689e52;
+        }
+
+
+        .links {
+            margin-top: 20px;
+            font-size: 12px;
+        }
+
+        .links a {
+            display: block;
+            margin: 4px;
+            color: #333;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .extra-fields {
+            margin-top: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="signup-container">
+    <div class="logo">
+        <img src="images/logo.png" alt="HacoBite Logo" style="width: 60px; height: 60px; margin-bottom: 10px;" />
+        <div style="font-size: 1.5rem; font-weight: bold; color: white;">HacoBite</div>
+    </div>
+    <input type="text" id="usernameInput" placeholder="Enter your username" style="display: block;">
+
+    <input type="email" placeholder="Enter your email address" />
+    <input type="password" placeholder="Enter your password" />
+    <input type="password" placeholder="Enter your password for verification" />
+
+    <!-- Extra fields appear here -->
+    <div id="extra-fields" class="extra-fields"></div>
+
+    <button class="sign-up-btn">Sign Up</button>
+
+    <div class="links" id="signup-links">
+        <a onclick="showRestaurantFields()">Restaurant Sign Up</a>
+        <a onclick="setUserType('courier')">Courier Sign Up</a> <!-- ✅ Courier ekledik -->
+    </div>
+
+    <div class="links hidden" id="back-link">
+        <a onclick="resetForm()">Back to Sign Up</a>
+    </div>
+    <div class="links" id="home-link">
+        <a href="index.html">Back to Home</a>
+    </div>
+</div>
+
+<script>
+    function showRestaurantFields() {
+        document.getElementById('usernameInput').style.display = 'none';
+        setUserType('restaurant');
+        const extraFields = document.getElementById("extra-fields");
+        extraFields.innerHTML = `
+            <input type="text" placeholder="Restaurant Name" />
+            <input type="text" placeholder="Owner Name" />
+        `;
+        toggleLinks(true);
+    }
+
+    function showAdminFields() {
+        document.getElementById('usernameInput').style.display = 'none';
+        setUserType('admin');
+        const extraFields = document.getElementById("extra-fields");
+        extraFields.innerHTML = `
+            <input type="text" placeholder="Admin Code" />
+        `;
+        toggleLinks(true);
+    }
+
+    function resetForm() {
+        document.getElementById("extra-fields").innerHTML = "";
+        document.getElementById('usernameInput').style.display = 'block';
+
+        toggleLinks(false);
+    }
+
+    function toggleLinks(isExtraVisible) {
+        document.getElementById("signup-links").classList.toggle("hidden", isExtraVisible);
+        document.getElementById("back-link").classList.toggle("hidden", !isExtraVisible);
+    }
+    let selectedUserType = null;
+
+    function setUserType(type) {
+        selectedUserType = type;
+    }
+    function getUserType(){
+        if (selectedUserType === null) {
+            return 'customer';
+        }
+        return selectedUserType ;
+    }
+</script>
+<script src="restaurant_home.js"></script>
+
+</body>
+</html>

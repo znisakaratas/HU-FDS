@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HacoBite Courier </title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+    body { background-color: #f8f9fa; color: #333; height: 100vh; display: flex; flex-direction: column; }
+
+    .header {
+      background-color: #77AB5C;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 220px;
+      background-color: white;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-item {
+      padding: 0.9rem 1.5rem;
+      cursor: pointer;
+      border-left: 4px solid transparent;
+      display: flex;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .sidebar-item:hover {
+      background-color: #f0f0f0;
+    }
+
+    .sidebar-item.active {
+      background-color: #e8f5e9;
+      border-left: 4px solid #77AB5C;
+    }
+
+    .sidebar-item.logout {
+      margin-top: auto;
+      color: #c0392b;
+    }
+
+    .main {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    .section {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .info-row {
+      margin-bottom: 10px;
+    }
+
+    .info-row strong {
+      display: inline-block;
+      width: 100px;
+      color: #555;
+    }
+
+    .status-online {
+      color: green;
+      font-weight: bold;
+    }
+
+    .status-offline {
+      color: red;
+      font-weight: bold;
+    }
+
+    .order-card {
+      border: 1px solid #e0e0e0;
+      border-left: 5px solid #77AB5C;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      background-color: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+
+    .order-card:hover {
+      transform: translateY(-2px);
+    }
+
+    button {
+      background-color: #77AB5C;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #77AB5C;
+    }
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #77AB5C;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+    }
+    input[type="text"], input[type="number"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+      .pretty-button {
+    background-color: #e9f5e1;
+    color: #3e8e41;
+    border: 2px solid #77AB5C;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .pretty-button:hover {
+    background-color: #d9efcf;
+  }
+
+
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">HacoBite Courier</div>
+    <div style="display: flex; gap: 1rem;">
+      <i class="fas fa-user" style="cursor: pointer;" onclick="goTo('profile')"></i>
+    </div>
+  </div>
+
+  <div class="main-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-item active" onclick="goTo('profile')"><i class="fas fa-user"></i> Profile</div>
+      <div class="sidebar-item" onclick="goTo('orders')"><i class="fas fa-truck"></i> Orders</div>
+      <div class="sidebar-item logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+      <!-- Profile Section -->
+      <div class="section" id="profileSection">
+        <h2>Courier Profile</h2>
+        <div class="info-row"><strong>Name:</strong> <span id="courierName">Loading...</span></div>
+        <div class="info-row"><strong>Email:</strong> <span id="courierEmail">Loading...</span></div>
+        <div class="info-row"><strong>Status:</strong> <span id="courierStatus" class="status-offline">Loading...</span></div>
+        <hr style="margin: 1.5rem 0;">
+
+          <h3>Edit Profile</h3>
+          <div style="display: flex; flex-direction: column; gap: 0.8rem; max-width: 400px;">
+            <input type="text" id="editName" placeholder="Name" />
+            <input type="number" id="editAge" placeholder="Age" />
+            <input type="text" id="editPhone" placeholder="Phone number (0XXX XXX XX XX)" />
+            <button class="pretty-button" onclick="updateCourierProfile()"> Update Profile</button>
+          </div>
+
+      </div>
+
+      <!-- Status Toggle -->
+      <div class="section">
+        <label class="switch">
+          <input type="checkbox" id="statusToggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span id="statusLabel" style="margin-left: 1rem; font-weight: bold; font-size: 1rem; color: #155724;">Status: Open</span>
+      </div>
+
+      <!-- Orders Section -->
+      <div class="section" id="ordersSection" style="display: none;">
+        <h2>Assigned Orders</h2>
+        <div id="orderList">
+          <p>Loading orders...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="courier.js"></script>
+</body>
+</html>

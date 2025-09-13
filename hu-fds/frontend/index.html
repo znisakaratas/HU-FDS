@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HacoBite Homepage</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #77AB5C;
+        }
+
+        .auth-buttons button {
+            margin-left: 1rem;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sign-up {
+            background-color: #77AB5C;
+            color: white;
+        }
+
+        .sign-in {
+            background-color: #77AB5C;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            background-color: white;
+            margin-bottom: 1rem;
+        }
+
+        .nav-links a {
+            margin: 0 1rem;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            max-width: 400px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .search-bar i {
+            color: #888;
+            margin-right: 0.5rem;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 1rem;
+        }
+
+
+        .popular-restaurants {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+
+        .menu-products {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .menu-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-bottom: 1px solid #eee;
+        }
+
+        .menu-card-content {
+            padding: 1rem;
+        }
+
+        .menu-card-content strong {
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .menu-card-content p {
+            margin: 4px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .menu-card-price {
+            margin-top: auto;
+            padding: 0.8rem;
+            text-align: right;
+            font-weight: bold;
+            color: #77AB5C;
+        }
+        .filter-box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 12px;
+            background: #f9f9f9;
+            padding: 1rem 1rem;
+            border-radius: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            max-width: 1100px;
+            margin: 0 auto 2rem 0;
+        }
+
+        .filter-box select,
+        .filter-box input {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            min-width: 120px;
+            font-size: 0.95rem;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            max-width: 600px;
+            margin: 1rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .search-bar i {
+            color: #888;
+            margin-right: 0.5rem;
+        }
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 1rem;
+        }
+        .btn {
+            background-color: #77AB5C;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.9rem;       /* küçültüldü */
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;            /* küçültüldü */
+            font-weight: 500;             /* biraz kalın ama abartı değil */
+        }
+
+        .btn:hover {
+            background-color: #689e52;
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">HacoBite</div>
+        <div class="auth-buttons">
+            <button class="sign-up">Sign Up</button>
+            <button class="sign-in">Sign In</button>
+        </div>
+    </nav>
+
+    <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#" onclick="alert('Please sign up first to explore our restaurants and features!')">Explore</a>
+    </div>
+
+
+
+
+    <div class="content">
+
+
+        <div class="menu-products">
+            <div class="section-title">Menus</div>
+
+            <form oninput="filterMenus()" style="margin-bottom: 2rem;">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="menuSearchInput" placeholder="Search menus by name, restaurant, or items..." />
+                </div>
+
+                <div class="filter-box">
+                    <input type="number" id="menuMinPrice" placeholder="Min ₺" oninput="filterMenus()">
+                    <input type="number" id="menuMaxPrice" placeholder="Max ₺" oninput="filterMenus()">
+                    <input type="number" id="menuMinCalories" placeholder="Min kcal" oninput="filterMenus()">
+                    <input type="number" id="menuMaxCalories" placeholder="Max kcal" oninput="filterMenus()">
+                </div>
+            </form>
+
+
+            <div id="menusContainer" class="menu-grid"></div>
+        </div>
+
+
+        <div class="menu-products">
+            <div class="section-title">Products</div>
+
+            <form oninput="filterProducts()" style="margin-bottom: 2rem;">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="productSearchInput" placeholder="Search by name, category or restaurant..." />
+                </div>
+
+                <div class="filter-box">
+                    <div class="filter-row">
+                        <input id="minPrice" placeholder="Min ₺" type="number" />
+                        <input id="maxPrice" placeholder="Max ₺" type="number" />
+                        <input id="minCalories" placeholder="Min kcal" type="number" />
+                        <input id="maxCalories" placeholder="Max kcal" type="number" />
+                    </div>
+                </div>
+            </form>
+
+
+            <div id="productsContainer" class="menu-grid"></div>
+        </div>
+
+
+
+
+
+    </div>
+    <div class="content">
+        <div class="popular-restaurants">
+            <div class="section-title">Popular Restaurants</div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="restaurantSearchInput" placeholder="Search restaurants..." oninput="filterRestaurants()" />
+            </div>
+
+
+            <div id="popularRestaurantsContainer" class="menu-grid"></div>
+        </div>
+    </div>
+    <script src="homepage.js"></script>
+</body>
+</html>

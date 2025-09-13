@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HacoBite Restaurant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+    }
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .header {
+      background-color: #77AB5C;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      font-size: 1.3rem;
+      font-weight: bold;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .header .logo {
+      font-size: 1.3rem;
+    }
+    .header .auth-buttons button {
+      margin-left: 10px;
+      background-color: #77AB5C;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .main-container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+    .sidebar {
+      width: 220px;
+      background-color: white;
+      border-right: 1px solid #e0e0e0;
+      padding: 1rem 0;
+    }
+    .sidebar-item {
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+    .sidebar-item:hover {
+      background-color: #f0f0f0;
+    }
+    .sidebar-item.active {
+      background-color: #e8f5e9;
+      border-left: 4px solid #77AB5C;
+    }
+    .sidebar-item i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+      color: #555;
+    }
+    .sidebar-item.active i {
+      color: #77AB5C;
+    }
+    .content-area {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .order-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .order-card {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .order-card span {
+      display: block;
+      font-weight: bold;
+      margin-top: 0.5rem;
+      color: #333;
+    }
+    .order-status {
+      padding: 0.4rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+    .status-ready {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .status-waiting {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .toggle-status {
+      margin-top: 8px;
+      background-color: #77AB5C;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .order-card {
+      background: #fff;
+      padding: 1.2rem;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      border: 1px solid #e0e0e0;
+      transition: transform 0.2s ease;
+    }
+    .order-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .order-card i {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #77AB5C;
+    }
+
+    .order-card span {
+      display: block;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .order-status {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 0.6rem;
+    }
+
+    .status-ready {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .status-waiting,
+    .status-pending,
+    .status-preparing {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .status-cancelled {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .status-delivered {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .toggle-status {
+      background: #77AB5C;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+    .toggle-status:hover {
+      background: #5e954d;
+    }
+
+    .order-card small {
+      color: #777;
+      font-size: 0.85rem;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">HacoBite Restaurant</div>
+  </div>
+  <div class="main-container">
+    <div class="sidebar">
+      <div class="sidebar-item">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+      </div>
+      <div class="sidebar-item active">
+        <i class="fas fa-clipboard-list"></i>
+        <span>Orders</span>
+      </div>
+      <div class="sidebar-item">
+        <i class="fas fa-utensils"></i>
+        <span>Menu</span>
+      </div>
+      <div class="sidebar-item">
+        <i class="fas fa-star"></i>
+        <span>Reviews</span>
+      </div>
+      <div class="sidebar-item" onclick="logout()" style="margin-top: auto; color: #c0392b;">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+      </div>
+    </div>
+    <div class="content-area">
+      <h2>Manage Orders</h2>
+      <div class="order-grid" id="orderGrid"></div>
+    </div>
+  </div>
+  <script src="restaurant_home.js"></script>
+
+  <script>
+    const customerNameMap = new Map(); // customerId → name eşleşmesi
+
+    function loadCustomers() {
+      const token = localStorage.getItem('jwtToken');
+
+      fetch('http://localhost:8080/api/admin/customers', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+              .then(res => res.json())
+              .then(customers => {
+                customerNameMap.clear();
+                customers.forEach(customer => {
+                  customerNameMap.set(customer.customerId, customer.name);
+                });
+              })
+              .catch(err => console.error("❌ Failed to load customers:", err));
+    }
+    function loadRestaurantOrders() {
+      const restaurantId = localStorage.getItem("restaurantId");
+      const token = localStorage.getItem("jwtToken");
+      const grid = document.getElementById("orderGrid");
+
+      fetch(`http://localhost:8080/api/restaurant/${restaurantId}/orders/list`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${token}` }
+      })
+        .then(res => res.json())
+        .then(orders => {
+          grid.innerHTML = "";
+
+          if (!orders.length) {
+            grid.innerHTML = "<p>No orders yet.</p>";
+            return;
+          }
+
+          orders.forEach(order => {
+            const card = document.createElement("div");
+            card.className = "order-card";
+
+            const statusClass = order.status === "READY"
+              ? "status-ready"
+              : "status-waiting";
+
+            const nextStatus = order.status === "PENDING"
+              ? "PREPARING"
+              : order.status === "PREPARING"
+                ? "READY"
+                : null;
+            const customerName = customerNameMap.get(Number(order.customerId)) ;
+
+            card.innerHTML = `
+  <i class="fas fa-clipboard-list fa-2x" style="color:#77AB5C;"></i>
+  <span>Order #${order.orderId}</span>
+  <div class="order-status ${statusClass}">${order.status}</div>
+  <small>${order.createdAt.replace("T", " ").split(".")[0]}</small>
+  <br/>
+  <small>Total: ${order.totalAmount}₺ | Items: ${order.itemCount}</small>
+  <br/>
+    <small>Customer: ${customerName}</small>
+  <br/>
+  <small>Courier: ${order.courierName}</small>
+  <br/>
+  <small>Items: ${order.itemNames.join(", ")}</small>
+  <br/>
+  ${
+                    nextStatus
+                            ? `<button class="toggle-status" onclick="updateOrderStatus(${order.orderId}, '${nextStatus}')">Set to ${nextStatus}</button>`
+                            : `<small style="color:gray;">No further status</small>`
+            }
+`;
+
+            grid.appendChild(card);
+          });
+        })
+        .catch(err => {
+          console.error("Error loading orders:", err);
+          grid.innerHTML = "<p>Error loading orders.</p>";
+        });
+    }
+    
+
+    document.querySelectorAll('.sidebar-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const page = item.textContent.trim();
+        switch (page) {
+          case 'Profile': window.location.href = 'restaurant.html'; break;
+          case 'Orders': window.location.href = 'restaurant_orders.html'; break;
+          case 'Menu': window.location.href = 'menu.html'; break;
+          case 'Reviews': window.location.href = 'restaurant_reviews.html'; break;
+        }
+      });
+    });
+    loadCustomers();
+    loadRestaurantOrders();
+  </script>
+
+</body>
+</html>

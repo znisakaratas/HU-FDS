@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Restaurant Reviews</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background-color: #77AB5C;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header .logo {
+            font-size: 1.3rem;
+        }
+        .main {
+            display: flex;
+            flex: 1;
+            overflow: hidden;    }
+
+        .sidebar {
+            width: 220px;
+            min-height: 100vh;
+            background-color: white;
+            padding: 1rem 0;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .sidebar-item {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .sidebar-item:hover {
+            background-color: #f0f0f0;
+        }
+        .sidebar-item.active {
+            background-color: #e8f5e9;
+            border-left: 4px solid #77AB5C;
+        }
+        .sidebar-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: #555;
+        }
+        .content {
+            flex: 1;
+            padding: 2rem;
+        }
+        .review-card {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .card {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        .order-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .gold-star {
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+        }
+
+    </style>
+</head>
+<body>
+<div class="header">HacoBite Restaurant</div>
+<div class="main">
+    <div class="sidebar">
+        <div class="sidebar-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Orders</span>
+        </div>
+        <div class="sidebar-item">
+            <i class="fas fa-utensils"></i>
+            <span>Menu</span>
+        </div>
+        <div class="sidebar-item active">
+            <i class="fas fa-star"></i>
+            <span>Reviews</span>
+        </div>
+        <div class="sidebar-item" onclick="logout()" style="margin-top: auto; color: #c0392b;">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </div>
+    </div>
+    <div class="content">
+        <h2>
+            <img src="avatars/star2.jpg" class="gold-star" />
+            Customer Reviews
+            <img src="avatars/star2.jpg" class="gold-star" />
+        </h2>
+        <div id="overallRating" style="margin-bottom: 1rem;"></div>
+        <div id="reviewList" class="order-grid"></div>
+    </div>
+</div>
+<script src="restaurant_home.js"></script>
+
+<script>
+
+    const token = localStorage.getItem("jwtToken");
+    const restaurantId = localStorage.getItem("restaurantId");
+
+    fetch(`http://localhost:8080/api/restaurant/${restaurantId}/profile/rates-and-reviews`, {
+        headers: { "Authorization": `Bearer ${token}` }
+    })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById("overallRating").innerHTML = `
+  <strong>Overall Rating:</strong> ${data.overallRating} / 5
+  <img src="avatars/star2.jpg" class="gold-star" />
+`;
+
+            const container = document.getElementById("reviewList");
+            if (!data.reviews.length) {
+                container.innerHTML = "<p>No reviews yet.</p>";
+            } else {
+                data.reviews.forEach(r => {
+                    const div = document.createElement("div");
+                    div.className = "review-card";
+
+                    const reviewText = r.review?.trim() ? r.review : "No review provided.";
+
+                    div.innerHTML = `
+  <strong>${r.customerName}</strong> (${new Date(r.createdAt).toLocaleString()})<br/>
+  Rating: ${r.rating}/5<br/>
+  Review: ${reviewText}
+`;
+
+                    container.appendChild(div);
+                });
+            }
+        })
+        .catch(err => {
+            console.error("Failed to load reviews:", err);
+            document.getElementById("reviewList").innerHTML = "<p>❌ Failed to load reviews.</p>";
+        });
+
+
+</script>
+</body>
+</html>
